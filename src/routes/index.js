@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import colors from '../assets/colors';
 
@@ -12,8 +12,9 @@ function Routes() {
     <App.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: colors.backgroundLight},
-      }}>
+        cardStyle: { backgroundColor: colors.backgroundLight },
+      }}
+    >
       <App.Screen name="Home" component={Home} />
     </App.Navigator>
   );

@@ -1,8 +1,8 @@
-import React, {useState, useCallback} from 'react';
-import {StatusBar} from 'react-native';
-import {v4 as uuidv4} from 'uuid';
+import React, { useState, useCallback } from 'react';
+import { StatusBar } from 'react-native';
+import { v4 as uuidv4 } from 'uuid';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {Container, Title, List, FloatButton} from './styles';
+import { Container, Title, List, FloatButton } from './styles';
 
 import colors from '../../assets/colors';
 
@@ -13,9 +13,9 @@ function Home() {
   const [tasks, setTasks] = useState([]);
 
   const handleNewTask = useCallback(() => {
-    const task = {id: uuidv4(), text: 'New Task'};
+    const task = { id: uuidv4(), text: 'New Task' };
 
-    setTasks(prevState => [...prevState, task]);
+    setTasks((prevState) => [...prevState, task]);
   }, []);
 
   return (
@@ -28,7 +28,7 @@ function Home() {
       <Title>Tarefas</Title>
       <List
         data={tasks}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <BoxTask first={index === 0} data={item} />
         )}
       />

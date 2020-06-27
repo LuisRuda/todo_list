@@ -1,7 +1,8 @@
-import React from 'react';
-import {Container, Text} from './styles';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
+import { Container, Text } from './styles';
 
-function BoxTask({data, first}) {
+function BoxTask({ data, first }) {
   return (
     <Container first={first}>
       <Text>{data.text}</Text>
@@ -9,4 +10,11 @@ function BoxTask({data, first}) {
   );
 }
 
-export default BoxTask;
+export default memo(BoxTask);
+
+BoxTask.propTypes = {
+  data: PropTypes.shape({
+    text: PropTypes.string,
+  }).isRequired,
+  first: PropTypes.bool.isRequired,
+};
