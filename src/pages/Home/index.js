@@ -13,10 +13,25 @@ function Home() {
   const [tasks, setTasks] = useState([]);
 
   const handleNewTask = useCallback(() => {
-    const task = { id: uuidv4(), text: 'New Task' };
+    const task = { id: uuidv4(), text: 'New Task', checked: false };
 
     setTasks((prevState) => [...prevState, task]);
   }, []);
+
+  const handleCheckTask = useCallback(
+    (id) => {
+      const tempTasks = tasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, checked: !task.checked };
+        }
+
+        return task;
+      });
+
+      setTasks(tempTasks);
+    },
+    [tasks]
+  );
 
   return (
     <Container>
@@ -28,8 +43,8 @@ function Home() {
       <Title>Tarefas</Title>
       <List
         data={tasks}
-        renderItem={({ item, index }) => (
-          <BoxTask first={index === 0} data={item} />
+        renderItem={({ item }) => (
+          <BoxTask data={item} handleCheckTask={handleCheckTask} />
         )}
       />
 

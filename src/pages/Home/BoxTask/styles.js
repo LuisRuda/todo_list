@@ -10,7 +10,7 @@ export const Container = styled.View`
   align-self: center;
   align-items: center;
   border-radius: 10px;
-  padding: 10px 15px;s
+  padding: 10px 15px;
   margin-bottom: 12px;
   elevation: 1;
 `;
