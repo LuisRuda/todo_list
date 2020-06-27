@@ -11,7 +11,7 @@ function BoxTask({ data, handleCheckTask }) {
       <CheckBox onPress={() => handleCheckTask(data.id)}>
         {data.checked && <Icon name="check" size={20} color={colors.green} />}
       </CheckBox>
-      <Text>{data.text}</Text>
+      <Text marked={data.checked}>{data.text}</Text>
     </Container>
   );
 }

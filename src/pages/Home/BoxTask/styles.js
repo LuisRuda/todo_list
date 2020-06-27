@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Dimensions } from 'react-native';
 
 import colors from '../../../assets/colors';
@@ -25,4 +25,13 @@ export const CheckBox = styled.TouchableOpacity`
   background-color: ${colors.white};
 `;
 
-export const Text = styled.Text``;
+export const Text = styled.Text`
+  color: ${colors.textLight};
+
+  ${(props) =>
+    props.marked &&
+    css`
+      text-decoration: line-through;
+      color: ${colors.textMarkedLight};
+    `};
+`;
