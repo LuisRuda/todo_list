@@ -6,7 +6,7 @@ import colors from '../../../assets/colors';
 export const Container = styled.View`
   width: ${Dimensions.get('window').width - 60}px;
   flex-direction: row;
-  background-color: #e5e5e5;
+  background-color: ${colors.taskContainerLight};
   align-self: center;
   align-items: center;
   border-radius: 10px;
@@ -16,8 +16,8 @@ export const Container = styled.View`
 `;
 
 export const CheckBox = styled.TouchableOpacity`
-  height: 26px;
-  width: 26px;
+  height: 28px;
+  width: 28px;
   border-radius: 4px;
   margin-right: 12px;
   align-items: center;
