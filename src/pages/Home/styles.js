@@ -33,6 +33,7 @@ export const FloatButton = styled(RectButton)`
 
 export const List = styled.FlatList`
   margin-top: 20px;
+  padding: 0 30px;
 `;
 
 export const ModalContainer = styled.View`

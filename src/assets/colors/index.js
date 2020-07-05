@@ -9,6 +9,8 @@ const colors = {
   asphalt: '#34495e',
   taskContainerLight: '#e5e5e5',
   modalContainerLight: '#e1e1e1',
+  danger: '#f37272',
+  blue: '#3498db',
 };
 
 export default colors;
