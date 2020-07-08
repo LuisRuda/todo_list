@@ -16,7 +16,7 @@ import {
 
 import colors from '../../../assets/colors';
 
-function BoxTask({ data, handleCheckTask }) {
+function BoxTask({ data, handleEditTask, handleCheckTask, handleRemoveTask }) {
   const [swipeRef, setSwipeRef] = useState(null);
 
   const renderLeftActions = useCallback(() => {
@@ -32,18 +32,34 @@ function BoxTask({ data, handleCheckTask }) {
     );
   }, [data.checked]);
 
+  const removeTask = useCallback(() => {
+    swipeRef.close();
+
+    setTimeout(() => {
+      handleRemoveTask(data.id);
+    }, 120);
+  }, [data.id, handleRemoveTask, swipeRef]);
+
+  const editTask = useCallback(() => {
+    swipeRef.close();
+
+    setTimeout(() => {
+      handleEditTask(data.id, data.text);
+    }, 120);
+  }, [data.id, data.text, handleEditTask, swipeRef]);
+
   const renderRightActions = useCallback(() => {
     return (
       <>
-        <DeleteButton>
+        <DeleteButton onPress={removeTask}>
           <Icon name="delete" size={18} color={colors.white} />
         </DeleteButton>
-        <EditButton>
+        <EditButton onPress={editTask}>
           <IconMD name="edit" size={20} color={colors.white} />
         </EditButton>
       </>
     );
-  }, []);
+  }, [removeTask, editTask]);
 
   const checkTask = useCallback(() => {
     handleCheckTask(data.id);
@@ -83,5 +99,7 @@ BoxTask.propTypes = {
     text: PropTypes.string,
     checked: PropTypes.bool,
   }).isRequired,
+  handleEditTask: PropTypes.func.isRequired,
   handleCheckTask: PropTypes.func.isRequired,
+  handleRemoveTask: PropTypes.func.isRequired,
 };

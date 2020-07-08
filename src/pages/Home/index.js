@@ -39,6 +39,7 @@ function Home() {
 
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState('');
+  const [editTask, setEditTask] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleNewTask = useCallback(() => {
@@ -73,6 +74,38 @@ function Home() {
     [tasks]
   );
 
+  const handleRemoveTask = useCallback(
+    (id) => {
+      const tempTasks = tasks.filter((task) => task.id !== id);
+
+      setTasks(tempTasks);
+    },
+    [tasks]
+  );
+
+  const handleEditTask = useCallback(
+    (id, taskValue) => {
+      setEditTask(id);
+      setTaskInput(taskValue);
+      handleNewTask();
+    },
+    [handleNewTask]
+  );
+
+  const handleEdit = useCallback(() => {
+    const tempTasks = tasks.map((task) => {
+      if (task.id === editTask) {
+        return { ...task, text: taskInput };
+      }
+      return task;
+    });
+
+    setModalVisible(false);
+    setTaskInput('');
+    setEditTask(null);
+    setTasks(tempTasks);
+  }, [tasks, editTask, taskInput]);
+
   return (
     <Container>
       <StatusBar
@@ -84,7 +117,12 @@ function Home() {
       <List
         data={tasks}
         renderItem={({ item }) => (
-          <BoxTask data={item} handleCheckTask={handleCheckTask} />
+          <BoxTask
+            data={item}
+            handleEditTask={handleEditTask}
+            handleCheckTask={handleCheckTask}
+            handleRemoveTask={handleRemoveTask}
+          />
         )}
       />
 
@@ -107,7 +145,7 @@ function Home() {
             onChangeText={setTaskInput}
             placeholder="Descrição da tarefa"
           />
-          <CustomButtom onPress={addNewTask}>
+          <CustomButtom onPress={editTask ? handleEdit : addNewTask}>
             <TextButton enabled={taskInput !== ''}>ADICIONAR</TextButton>
           </CustomButtom>
         </ModalContainer>
