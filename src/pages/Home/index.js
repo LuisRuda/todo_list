@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { StatusBar, Platform, Dimensions, StyleSheet } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {
@@ -18,6 +17,9 @@ import colors from '../../assets/colors';
 
 // Components
 import BoxTask from './BoxTask';
+
+// Hooks
+import useTasks from '../../hooks/useTasks';
 
 function Home() {
   const styles = StyleSheet.create({
@@ -37,74 +39,51 @@ function Home() {
           'REAL_WINDOW_HEIGHT'
         );
 
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks, toggleTask, updateTask] = useTasks();
   const [taskInput, setTaskInput] = useState('');
-  const [editTask, setEditTask] = useState(null);
+  const [idTaskEditable, setIdTaskEditable] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleNewTask = useCallback(() => {
     setModalVisible(true);
     setTimeout(() => {
       taskInputRef.current.focus();
-    }, 250);
+    }, 400);
   }, []);
 
   const addNewTask = useCallback(() => {
     if (taskInput === '') return;
 
+    const task = { description: taskInput, completed: false };
+    setTasks(task);
+
     setModalVisible(false);
     setTaskInput('');
-
-    const task = { id: uuidv4(), text: taskInput, checked: false };
-    setTasks((prevState) => [...prevState, task]);
-  }, [taskInput]);
+  }, [taskInput, setTasks]);
 
   const handleCheckTask = useCallback(
-    (id) => {
-      const tempTasks = tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, checked: !task.checked };
-        }
-
-        return task;
-      });
-
-      setTasks(tempTasks);
+    (task) => {
+      toggleTask(task.id, !task.completed);
     },
-    [tasks]
+    [toggleTask]
   );
 
-  const handleRemoveTask = useCallback(
-    (id) => {
-      const tempTasks = tasks.filter((task) => task.id !== id);
-
-      setTasks(tempTasks);
-    },
-    [tasks]
-  );
-
-  const handleEditTask = useCallback(
+  const handleModalEditTask = useCallback(
     (id, taskValue) => {
-      setEditTask(id);
+      setIdTaskEditable(id);
       setTaskInput(taskValue);
       handleNewTask();
     },
     [handleNewTask]
   );
 
-  const handleEdit = useCallback(() => {
-    const tempTasks = tasks.map((task) => {
-      if (task.id === editTask) {
-        return { ...task, text: taskInput };
-      }
-      return task;
-    });
+  const handleEdit = useCallback(async () => {
+    await updateTask(idTaskEditable, taskInput);
 
     setModalVisible(false);
     setTaskInput('');
-    setEditTask(null);
-    setTasks(tempTasks);
-  }, [tasks, editTask, taskInput]);
+    setIdTaskEditable(null);
+  }, [idTaskEditable, taskInput, updateTask, tasks]);
 
   return (
     <Container>
@@ -119,9 +98,8 @@ function Home() {
         renderItem={({ item }) => (
           <BoxTask
             data={item}
-            handleEditTask={handleEditTask}
+            handleEditTask={handleModalEditTask}
             handleCheckTask={handleCheckTask}
-            handleRemoveTask={handleRemoveTask}
           />
         )}
       />
@@ -145,7 +123,7 @@ function Home() {
             onChangeText={setTaskInput}
             placeholder="Descrição da tarefa"
           />
-          <CustomButtom onPress={editTask ? handleEdit : addNewTask}>
+          <CustomButtom onPress={idTaskEditable ? handleEdit : addNewTask}>
             <TextButton enabled={taskInput !== ''}>ADICIONAR</TextButton>
           </CustomButtom>
         </ModalContainer>

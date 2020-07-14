@@ -16,37 +16,42 @@ import {
 
 import colors from '../../../assets/colors';
 
-function BoxTask({ data, handleEditTask, handleCheckTask, handleRemoveTask }) {
+// Hooks
+import useTasks from '../../../hooks/useTasks';
+
+function BoxTask({ data, handleEditTask, handleCheckTask }) {
   const [swipeRef, setSwipeRef] = useState(null);
+
+  const [, , , , deleteTask] = useTasks();
 
   const renderLeftActions = useCallback(() => {
     return (
-      <CkeckButton closed={data.checked}>
+      <CkeckButton closed={data.completed}>
         <Icon
-          name={data.checked ? 'close' : 'check'}
+          name={data.completed ? 'close' : 'check'}
           size={20}
           color={colors.white}
         />
-        <CkeckText>{data.checked ? 'Desmarcar' : 'Marcar'}</CkeckText>
+        <CkeckText>{data.completed ? 'Desmarcar' : 'Marcar'}</CkeckText>
       </CkeckButton>
     );
-  }, [data.checked]);
+  }, [data.completed]);
 
   const removeTask = useCallback(() => {
     swipeRef.close();
 
     setTimeout(() => {
-      handleRemoveTask(data.id);
+      deleteTask(data);
     }, 120);
-  }, [data.id, handleRemoveTask, swipeRef]);
+  }, [data, deleteTask, swipeRef]);
 
   const editTask = useCallback(() => {
     swipeRef.close();
 
     setTimeout(() => {
-      handleEditTask(data.id, data.text);
+      handleEditTask(data.id, data.description);
     }, 120);
-  }, [data.id, data.text, handleEditTask, swipeRef]);
+  }, [data.id, data.description, handleEditTask, swipeRef]);
 
   const renderRightActions = useCallback(() => {
     return (
@@ -62,9 +67,9 @@ function BoxTask({ data, handleEditTask, handleCheckTask, handleRemoveTask }) {
   }, [removeTask, editTask]);
 
   const checkTask = useCallback(() => {
-    handleCheckTask(data.id);
+    handleCheckTask(data);
     swipeRef.close();
-  }, [data.id, handleCheckTask, swipeRef]);
+  }, [data, handleCheckTask, swipeRef]);
 
   return (
     <Swipeable
@@ -78,14 +83,14 @@ function BoxTask({ data, handleEditTask, handleCheckTask, handleRemoveTask }) {
       renderRightActions={renderRightActions}
     >
       <Container>
-        <CheckBox onPress={() => handleCheckTask(data.id)}>
+        <CheckBox onPress={() => handleCheckTask(data)}>
           <View>
-            {data.checked && (
+            {data.completed && (
               <Icon name="check" size={20} color={colors.green} />
             )}
           </View>
         </CheckBox>
-        <Text marked={data.checked}>{data.text}</Text>
+        <Text marked={data.completed}>{data.description}</Text>
       </Container>
     </Swipeable>
   );
@@ -96,10 +101,9 @@ export default memo(BoxTask);
 BoxTask.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
-    text: PropTypes.string,
-    checked: PropTypes.bool,
+    description: PropTypes.string,
+    completed: PropTypes.bool,
   }).isRequired,
   handleEditTask: PropTypes.func.isRequired,
   handleCheckTask: PropTypes.func.isRequired,
-  handleRemoveTask: PropTypes.func.isRequired,
 };
