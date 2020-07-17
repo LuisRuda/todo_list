@@ -8,7 +8,7 @@ import {
   deleteTask,
 } from '../services/Tasks';
 
-const useEntries = () => {
+const useEntries = (refresh = false) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const useEntries = () => {
     }
 
     loadTasks();
-  }, []);
+  }, [refresh]);
 
   return [tasks, saveTask, ToggleTask, updateTask, deleteTask];
 };

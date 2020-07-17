@@ -19,10 +19,8 @@ import colors from '../../../assets/colors';
 // Hooks
 import useTasks from '../../../hooks/useTasks';
 
-function BoxTask({ data, handleEditTask, handleCheckTask }) {
+function BoxTask({ data, handleEditTask, handleCheckTask, handleDeleteTask }) {
   const [swipeRef, setSwipeRef] = useState(null);
-
-  const [, , , , deleteTask] = useTasks();
 
   const renderLeftActions = useCallback(() => {
     return (
@@ -41,9 +39,9 @@ function BoxTask({ data, handleEditTask, handleCheckTask }) {
     swipeRef.close();
 
     setTimeout(() => {
-      deleteTask(data);
+      handleDeleteTask(data);
     }, 120);
-  }, [data, deleteTask, swipeRef]);
+  }, [data, swipeRef, handleDeleteTask]);
 
   const editTask = useCallback(() => {
     swipeRef.close();
@@ -106,4 +104,5 @@ BoxTask.propTypes = {
   }).isRequired,
   handleEditTask: PropTypes.func.isRequired,
   handleCheckTask: PropTypes.func.isRequired,
+  handleDeleteTask: PropTypes.func.isRequired,
 };

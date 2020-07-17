@@ -38,11 +38,13 @@ function Home() {
       : require('react-native-extra-dimensions-android').get(
           'REAL_WINDOW_HEIGHT'
         );
-
-  const [tasks, setTasks, toggleTask, updateTask] = useTasks();
+  const [refresh, setRefresh] = useState(false);
   const [taskInput, setTaskInput] = useState('');
-  const [idTaskEditable, setIdTaskEditable] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [idTaskEditable, setIdTaskEditable] = useState(null);
+  const [tasks, setTasks, toggleTask, updateTask, deleteTask] = useTasks(
+    refresh
+  );
 
   const handleNewTask = useCallback(() => {
     setModalVisible(true);
@@ -54,22 +56,28 @@ function Home() {
   const addNewTask = useCallback(() => {
     if (taskInput === '') return;
 
+    setRefresh(true);
+
     const task = { description: taskInput, completed: false };
     setTasks(task);
 
+    setRefresh(false);
     setModalVisible(false);
     setTaskInput('');
   }, [taskInput, setTasks]);
 
   const handleCheckTask = useCallback(
-    (task) => {
-      toggleTask(task.id, !task.completed);
+    async (task) => {
+      setRefresh(true);
+      await toggleTask(task.id, !task.completed);
+      setRefresh(false);
     },
     [toggleTask]
   );
 
   const handleModalEditTask = useCallback(
     (id, taskValue) => {
+      setRefresh(true);
       setIdTaskEditable(id);
       setTaskInput(taskValue);
       handleNewTask();
@@ -83,7 +91,17 @@ function Home() {
     setModalVisible(false);
     setTaskInput('');
     setIdTaskEditable(null);
-  }, [idTaskEditable, taskInput, updateTask, tasks]);
+    setRefresh(false);
+  }, [idTaskEditable, taskInput, updateTask]);
+
+  const handleDeleteTask = useCallback(
+    async (data) => {
+      setRefresh(true);
+      await deleteTask(data);
+      setRefresh(false);
+    },
+    [deleteTask]
+  );
 
   return (
     <Container>
@@ -100,6 +118,7 @@ function Home() {
             data={item}
             handleEditTask={handleModalEditTask}
             handleCheckTask={handleCheckTask}
+            handleDeleteTask={handleDeleteTask}
           />
         )}
       />
@@ -124,7 +143,9 @@ function Home() {
             placeholder="Descrição da tarefa"
           />
           <CustomButtom onPress={idTaskEditable ? handleEdit : addNewTask}>
-            <TextButton enabled={taskInput !== ''}>ADICIONAR</TextButton>
+            <TextButton enabled={taskInput !== ''}>
+              {idTaskEditable ? 'ATUALIZAR' : 'ADICIONAR'}
+            </TextButton>
           </CustomButtom>
         </ModalContainer>
       </Modal>
