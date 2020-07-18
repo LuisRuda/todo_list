@@ -53,13 +53,13 @@ function Home() {
     }, 400);
   }, []);
 
-  const addNewTask = useCallback(() => {
+  const addNewTask = useCallback(async () => {
     if (taskInput === '') return;
 
     setRefresh(true);
 
     const task = { description: taskInput, completed: false };
-    setTasks(task);
+    await setTasks(task);
 
     setRefresh(false);
     setModalVisible(false);
@@ -103,6 +103,13 @@ function Home() {
     [deleteTask]
   );
 
+  const handleCloseModal = useCallback(() => {
+    setModalVisible(false);
+
+    setTaskInput('');
+    setIdTaskEditable(null);
+  }, []);
+
   return (
     <Container>
       <StatusBar
@@ -133,7 +140,7 @@ function Home() {
         deviceWidth={deviceWidth}
         deviceHeight={deviceHeight}
         isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
+        onBackdropPress={handleCloseModal}
       >
         <ModalContainer>
           <CustomInput

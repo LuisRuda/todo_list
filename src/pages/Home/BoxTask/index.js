@@ -16,9 +16,6 @@ import {
 
 import colors from '../../../assets/colors';
 
-// Hooks
-import useTasks from '../../../hooks/useTasks';
-
 function BoxTask({ data, handleEditTask, handleCheckTask, handleDeleteTask }) {
   const [swipeRef, setSwipeRef] = useState(null);
 
@@ -27,7 +24,7 @@ function BoxTask({ data, handleEditTask, handleCheckTask, handleDeleteTask }) {
       <CkeckButton closed={data.completed}>
         <Icon
           name={data.completed ? 'close' : 'check'}
-          size={20}
+          size={22}
           color={colors.white}
         />
         <CkeckText>{data.completed ? 'Desmarcar' : 'Marcar'}</CkeckText>
@@ -55,10 +52,10 @@ function BoxTask({ data, handleEditTask, handleCheckTask, handleDeleteTask }) {
     return (
       <>
         <DeleteButton onPress={removeTask}>
-          <Icon name="delete" size={18} color={colors.white} />
+          <Icon name="delete" size={22} color={colors.white} />
         </DeleteButton>
         <EditButton onPress={editTask}>
-          <IconMD name="edit" size={20} color={colors.white} />
+          <IconMD name="edit" size={22} color={colors.white} />
         </EditButton>
       </>
     );

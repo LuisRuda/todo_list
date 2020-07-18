@@ -25,7 +25,7 @@ export const FloatButton = styled(RectButton)`
   background-color: ${colors.primaryLight};
   position: absolute;
   bottom: 25px;
-  right: 25px;
+  right: 22px;
   align-items: center;
   justify-content: center;
   elevation: 6;
@@ -33,7 +33,7 @@ export const FloatButton = styled(RectButton)`
 
 export const List = styled.FlatList`
   margin-top: 20px;
-  padding: 0 30px;
+  padding: 0 16px;
 `;
 
 export const ModalContainer = styled.View`
