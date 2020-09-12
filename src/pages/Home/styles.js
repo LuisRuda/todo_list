@@ -7,6 +7,7 @@ import colors from '../../assets/colors';
 export const Container = styled.SafeAreaView`
   flex: 1;
   position: relative;
+  background-color: ${colors.white};
 `;
 
 export const Title = styled.Text`
@@ -33,7 +34,6 @@ export const FloatButton = styled(RectButton)`
 
 export const List = styled.FlatList`
   margin-top: 20px;
-  padding: 0 16px;
 `;
 
 export const ModalContainer = styled.View`

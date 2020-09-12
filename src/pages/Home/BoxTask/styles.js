@@ -1,18 +1,19 @@
 import styled, { css } from 'styled-components/native';
+import { Dimensions } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import colors from '../../../assets/colors';
 
 export const Container = styled.View`
-  width: 100%;
+  width: ${Dimensions.get('window').width - 40}px;
+  background-color: ${colors.white};
   flex-direction: row;
-  background-color: ${colors.taskContainerLight};
   align-self: center;
   align-items: center;
   border-radius: 8px;
   padding: 14px 15px;
-  margin-bottom: 16px;
-  elevation: 1;
+  margin: 10px auto;
+  elevation: 6;
 `;
 
 export const CheckBox = styled(RectButton)`
@@ -22,7 +23,7 @@ export const CheckBox = styled(RectButton)`
   margin-right: 12px;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.white};
+  background-color: ${colors.backgroundLight};
 `;
 
 export const Text = styled.Text`
@@ -38,8 +39,8 @@ export const Text = styled.Text`
 
 export const CkeckButton = styled(RectButton)`
   background-color: ${colors.green};
-  margin-bottom: 16px;
-  flex: 1;
+  width: ${Dimensions.get('window').width - 40}px;
+  margin: 10px auto;
   flex-direction: row;
   padding-left: 16px;
   align-items: center;
@@ -61,7 +62,7 @@ export const CkeckText = styled.Text`
 
 export const EditButton = styled(RectButton)`
   background-color: ${colors.blue};
-  margin-bottom: 16px;
+  margin: 10px 0;
   width: 60px;
   align-items: center;
   justify-content: center;
@@ -70,7 +71,8 @@ export const EditButton = styled(RectButton)`
 
 export const DeleteButton = styled(RectButton)`
   background-color: ${colors.danger};
-  margin-bottom: 16px;
+  margin: 10px 0;
+  margin-right: 20px;
   width: 60px;
   align-items: center;
   justify-content: center;

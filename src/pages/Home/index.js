@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { StatusBar, Platform, Dimensions, StyleSheet } from 'react-native';
+import { v4 as uuidv4 } from 'uuid';
 import Modal from 'react-native-modal';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {
   Container,
@@ -15,11 +17,16 @@ import {
 
 import colors from '../../assets/colors';
 
+// Actions
+import {
+  handleNewTask,
+  handleRemoveTask,
+  handleCheckTask,
+  handleUpdateTask,
+} from '../../store/modules/task/actions';
+
 // Components
 import BoxTask from './BoxTask';
-
-// Hooks
-import useTasks from '../../hooks/useTasks';
 
 function Home() {
   const styles = StyleSheet.create({
@@ -29,8 +36,6 @@ function Home() {
     },
   });
 
-  const taskInputRef = useRef();
-
   const deviceWidth = Dimensions.get('window').width;
   const deviceHeight =
     Platform.OS === 'ios'
@@ -38,69 +43,64 @@ function Home() {
       : require('react-native-extra-dimensions-android').get(
           'REAL_WINDOW_HEIGHT'
         );
-  const [refresh, setRefresh] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const tasks = useSelector((state) => state.task.tasks);
+
+  const taskInputRef = useRef();
+
   const [taskInput, setTaskInput] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [idTaskEditable, setIdTaskEditable] = useState(null);
-  const [tasks, setTasks, toggleTask, updateTask, deleteTask] = useTasks(
-    refresh
-  );
 
-  const handleNewTask = useCallback(() => {
+  const handleFocusNewTask = useCallback(() => {
     setModalVisible(true);
     setTimeout(() => {
       taskInputRef.current.focus();
     }, 400);
   }, []);
 
-  const addNewTask = useCallback(async () => {
+  const onHandleNewTask = useCallback(() => {
     if (taskInput === '') return;
 
-    setRefresh(true);
+    const task = { id: uuidv4(), body: taskInput, done: false };
+    dispatch(handleNewTask(task));
 
-    const task = { description: taskInput, completed: false };
-    await setTasks(task);
-
-    setRefresh(false);
     setModalVisible(false);
     setTaskInput('');
-  }, [taskInput, setTasks]);
+  }, [taskInput, dispatch]);
 
-  const handleCheckTask = useCallback(
-    async (task) => {
-      setRefresh(true);
-      await toggleTask(task.id, !task.completed);
-      setRefresh(false);
+  const onHandleCheckTask = useCallback(
+    (taskId) => {
+      dispatch(handleCheckTask(taskId));
     },
-    [toggleTask]
+    [dispatch]
   );
 
   const handleModalEditTask = useCallback(
     (id, taskValue) => {
-      setRefresh(true);
       setIdTaskEditable(id);
       setTaskInput(taskValue);
-      handleNewTask();
+      handleFocusNewTask();
     },
-    [handleNewTask]
+    [handleFocusNewTask]
   );
 
-  const handleEdit = useCallback(async () => {
-    await updateTask(idTaskEditable, taskInput);
+  const onHandleEditTask = useCallback(() => {
+    dispatch(handleUpdateTask(idTaskEditable, taskInput));
 
     setModalVisible(false);
     setTaskInput('');
     setIdTaskEditable(null);
-    setRefresh(false);
-  }, [idTaskEditable, taskInput, updateTask]);
+  }, [dispatch, idTaskEditable, taskInput]);
 
-  const handleDeleteTask = useCallback(
-    async (data) => {
-      setRefresh(true);
-      await deleteTask(data);
-      setRefresh(false);
+  const onHandleDeleteTask = useCallback(
+    (id) => {
+      console.log(id);
+      dispatch(handleRemoveTask(id));
     },
-    [deleteTask]
+    [dispatch]
   );
 
   const handleCloseModal = useCallback(() => {
@@ -112,10 +112,7 @@ function Home() {
 
   return (
     <Container>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={colors.backgroundLight}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
 
       <Title>Tarefas</Title>
       <List
@@ -124,13 +121,13 @@ function Home() {
           <BoxTask
             data={item}
             handleEditTask={handleModalEditTask}
-            handleCheckTask={handleCheckTask}
-            handleDeleteTask={handleDeleteTask}
+            onHandleCheckTask={onHandleCheckTask}
+            onHandleDeleteTask={onHandleDeleteTask}
           />
         )}
       />
 
-      <FloatButton onPress={handleNewTask}>
+      <FloatButton onPress={handleFocusNewTask}>
         <Icon name="plus" size={30} color={colors.white} />
       </FloatButton>
 
@@ -149,7 +146,9 @@ function Home() {
             onChangeText={setTaskInput}
             placeholder="Descrição da tarefa"
           />
-          <CustomButtom onPress={idTaskEditable ? handleEdit : addNewTask}>
+          <CustomButtom
+            onPress={idTaskEditable ? onHandleEditTask : onHandleNewTask}
+          >
             <TextButton enabled={taskInput !== ''}>
               {idTaskEditable ? 'ATUALIZAR' : 'ADICIONAR'}
             </TextButton>
