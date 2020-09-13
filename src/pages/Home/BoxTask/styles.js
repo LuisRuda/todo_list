@@ -27,8 +27,11 @@ export const CheckBox = styled(RectButton)`
   elevation: 1;
 `;
 
-export const Text = styled.Text`
+export const Text = styled.Text.attrs({
+  numberOfLines: 2,
+})`
   color: ${colors.textLight};
+  flex: 1;
 
   ${(props) =>
     props.marked &&

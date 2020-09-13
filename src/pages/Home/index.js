@@ -14,6 +14,8 @@ import {
   CustomInput,
   CustomButtom,
   TextButton,
+  EmptyContainer,
+  Text,
 } from './styles';
 
 import colors from '../../assets/colors';
@@ -134,6 +136,7 @@ function Home() {
       <Title>Tarefas</Title>
       <List
         data={tasks}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <BoxTask
             data={item}
@@ -141,6 +144,14 @@ function Home() {
             onHandleCheckTask={onHandleCheckTask}
             onHandleDeleteTask={onHandleDeleteTask}
           />
+        )}
+        ListEmptyComponent={() => (
+          <EmptyContainer>
+            <Title emptyTitle>Nenhuma anotação no momento</Title>
+            <Text>
+              Clique no botão "+" para cadastrar sua primeira anotação.
+            </Text>
+          </EmptyContainer>
         )}
       />
 

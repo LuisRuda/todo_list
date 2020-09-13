@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
@@ -20,6 +20,12 @@ export const Title = styled.Text`
   margin-top: 12px;
   font-family: 'Roboto-Medium';
   color: ${colors.primaryLight};
+
+  ${(props) =>
+    props.emptyTitle &&
+    css`
+      font-size: 18px;
+    `};
 `;
 
 export const FloatButton = styled(RectButton)`
@@ -71,4 +77,16 @@ export const TextButton = styled.Text`
   font-family: 'Roboto-Medium';
   color: ${colors.primaryLight};
   font-size: 16px;
+`;
+
+export const EmptyContainer = styled.View`
+  padding: 160px 60px;
+`;
+
+export const Text = styled.Text`
+  font-size: 16px;
+  margin-top: 10px;
+  text-align: center;
+  font-family: 'Roboto-Regular';
+  color: ${colors.textMarkedLight};
 `;
