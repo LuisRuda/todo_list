@@ -102,7 +102,6 @@ function Home() {
 
   const onHandleDeleteTask = useCallback(
     (id) => {
-      console.log(id);
       dispatch(handleRemoveTask(id));
     },
     [dispatch]
