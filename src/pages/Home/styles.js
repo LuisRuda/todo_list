@@ -1,8 +1,11 @@
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import colors from '../../assets/colors';
+
+// Components
+import Input from '../../components/Form/Input';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -47,7 +50,7 @@ export const ModalContainer = styled.View`
   border-top-right-radius: 18px;
 `;
 
-export const CustomInput = styled.TextInput.attrs({
+export const CustomInput = styled(Input).attrs({
   multiline: true,
 })`
   background-color: ${colors.white};
@@ -66,12 +69,6 @@ export const CustomButtom = styled.TouchableOpacity`
 
 export const TextButton = styled.Text`
   font-family: 'Roboto-Medium';
-  color: ${colors.textMarkedLight};
+  color: ${colors.primaryLight};
   font-size: 16px;
-
-  ${(props) =>
-    props.enabled &&
-    css`
-      color: ${colors.primaryLight};
-    `}
 `;

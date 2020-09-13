@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { StatusBar, Platform, Dimensions, StyleSheet } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
+import { Form } from '@unform/mobile';
 import Modal from 'react-native-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -48,9 +49,10 @@ function Home() {
 
   const tasks = useSelector((state) => state.task.tasks);
 
+  const formRef = useRef();
   const taskInputRef = useRef();
 
-  const [taskInput, setTaskInput] = useState('');
+  const [initialValue, setInitialValue] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [idTaskEditable, setIdTaskEditable] = useState(null);
 
@@ -61,15 +63,15 @@ function Home() {
     }, 400);
   }, []);
 
-  const onHandleNewTask = useCallback(() => {
-    if (taskInput === '') return;
+  const onHandleNewTask = useCallback(
+    (body) => {
+      const task = { id: uuidv4(), body, done: false };
+      dispatch(handleNewTask(task));
 
-    const task = { id: uuidv4(), body: taskInput, done: false };
-    dispatch(handleNewTask(task));
-
-    setModalVisible(false);
-    setTaskInput('');
-  }, [taskInput, dispatch]);
+      setModalVisible(false);
+    },
+    [dispatch]
+  );
 
   const onHandleCheckTask = useCallback(
     (taskId) => {
@@ -81,19 +83,22 @@ function Home() {
   const handleModalEditTask = useCallback(
     (id, taskValue) => {
       setIdTaskEditable(id);
-      setTaskInput(taskValue);
+      setInitialValue({ taskInput: taskValue });
       handleFocusNewTask();
     },
     [handleFocusNewTask]
   );
 
-  const onHandleEditTask = useCallback(() => {
-    dispatch(handleUpdateTask(idTaskEditable, taskInput));
+  const onHandleEditTask = useCallback(
+    (body) => {
+      dispatch(handleUpdateTask(idTaskEditable, body));
 
-    setModalVisible(false);
-    setTaskInput('');
-    setIdTaskEditable(null);
-  }, [dispatch, idTaskEditable, taskInput]);
+      setModalVisible(false);
+      setInitialValue(null);
+      setIdTaskEditable(null);
+    },
+    [dispatch, idTaskEditable]
+  );
 
   const onHandleDeleteTask = useCallback(
     (id) => {
@@ -106,9 +111,22 @@ function Home() {
   const handleCloseModal = useCallback(() => {
     setModalVisible(false);
 
-    setTaskInput('');
+    setInitialValue(null);
     setIdTaskEditable(null);
   }, []);
+
+  const handleSubmit = useCallback(
+    ({ taskInput }) => {
+      if (taskInput === '') return;
+
+      if (idTaskEditable) {
+        onHandleEditTask(taskInput);
+      } else {
+        onHandleNewTask(taskInput);
+      }
+    },
+    [idTaskEditable, onHandleEditTask, onHandleNewTask]
+  );
 
   return (
     <Container>
@@ -140,19 +158,22 @@ function Home() {
         onBackdropPress={handleCloseModal}
       >
         <ModalContainer>
-          <CustomInput
-            value={taskInput}
-            ref={taskInputRef}
-            onChangeText={setTaskInput}
-            placeholder="Descrição da tarefa"
-          />
-          <CustomButtom
-            onPress={idTaskEditable ? onHandleEditTask : onHandleNewTask}
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            initialData={initialValue}
           >
-            <TextButton enabled={taskInput !== ''}>
-              {idTaskEditable ? 'ATUALIZAR' : 'ADICIONAR'}
-            </TextButton>
-          </CustomButtom>
+            <CustomInput
+              name="taskInput"
+              ref={taskInputRef}
+              placeholder="Descrição da tarefa"
+            />
+            <CustomButtom onPress={() => formRef.current.submitForm()}>
+              <TextButton>
+                {idTaskEditable ? 'ATUALIZAR' : 'ADICIONAR'}
+              </TextButton>
+            </CustomButtom>
+          </Form>
         </ModalContainer>
       </Modal>
     </Container>
