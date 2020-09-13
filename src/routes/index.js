@@ -12,7 +12,7 @@ function Routes() {
     <App.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: colors.backgroundLight },
+        cardStyle: { backgroundColor: colors.whiteSmoke },
       }}
     >
       <App.Screen name="Home" component={Home} />

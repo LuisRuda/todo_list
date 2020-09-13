@@ -50,7 +50,7 @@ export const ModalContainer = styled.View`
 export const CustomInput = styled.TextInput.attrs({
   multiline: true,
 })`
-  background-color: ${colors.backgroundLight};
+  background-color: ${colors.white};
   align-self: center;
   border-radius: 12px;
   padding-horizontal: 12px;

@@ -10,6 +10,7 @@ import {
   Text,
   CkeckButton,
   CkeckText,
+  ActionButtons,
   EditButton,
   DeleteButton,
 } from './styles';
@@ -55,14 +56,14 @@ function BoxTask({
 
   const renderRightActions = useCallback(() => {
     return (
-      <>
+      <ActionButtons>
         <DeleteButton onPress={removeTask}>
           <Icon name="delete" size={22} color={colors.white} />
         </DeleteButton>
         <EditButton onPress={editTask}>
           <IconMD name="edit" size={22} color={colors.white} />
         </EditButton>
-      </>
+      </ActionButtons>
     );
   }, [removeTask, editTask]);
 

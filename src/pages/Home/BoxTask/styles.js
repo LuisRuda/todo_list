@@ -7,12 +7,12 @@ import colors from '../../../assets/colors';
 export const Container = styled.View`
   width: ${Dimensions.get('window').width - 40}px;
   background-color: ${colors.white};
-  flex-direction: row;
   align-self: center;
+  flex-direction: row;
   align-items: center;
   border-radius: 8px;
   padding: 14px 15px;
-  margin: 10px auto;
+  margin: 10px 0;
   elevation: 6;
 `;
 
@@ -23,7 +23,8 @@ export const CheckBox = styled(RectButton)`
   margin-right: 12px;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.backgroundLight};
+  background-color: ${colors.whiteSmoke};
+  elevation: 1;
 `;
 
 export const Text = styled.Text`
@@ -45,6 +46,7 @@ export const CkeckButton = styled(RectButton)`
   padding-left: 16px;
   align-items: center;
   border-radius: 8px;
+  elevation: 6;
 
   ${(props) =>
     props.closed &&
@@ -60,6 +62,11 @@ export const CkeckText = styled.Text`
   font-family: 'Roboto-Medium';
 `;
 
+export const ActionButtons = styled.View`
+  left: 20px;
+  flex-direction: row-reverse;
+`;
+
 export const EditButton = styled(RectButton)`
   background-color: ${colors.blue};
   margin: 10px 0;
@@ -67,14 +74,15 @@ export const EditButton = styled(RectButton)`
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+  elevation: 2;
 `;
 
 export const DeleteButton = styled(RectButton)`
   background-color: ${colors.danger};
   margin: 10px 0;
-  margin-right: 20px;
   width: 60px;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+  elevation: 2;
 `;
